@@ -5,8 +5,8 @@ const favoriteSchema = new mongoose.Schema({
   title: { type: String, required: true },
   poster_path: { type: String },
   overview: { type: String },
-  release_date: { type: String }, // Optional: Add if you're storing this
-}, { _id: false }); // Prevent Mongoose from creating _id for each favorite
+  release_date: { type: String }, 
+}, { _id: false }); // prevent Mongoose from creating _id for each favorite
 
 const userSchema = new mongoose.Schema({
   username: {

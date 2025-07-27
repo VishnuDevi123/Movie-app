@@ -23,7 +23,7 @@ function Login() {
     const response = await loginUser(formData);
     if (response.token) {
       localStorage.setItem("token", response.token);
-      await fetchFavorites(); // ⏳ wait for full fetch
+      await fetchFavorites(); // wait for full fetch
       setLoading(false);
       navigate("/");
     } else {

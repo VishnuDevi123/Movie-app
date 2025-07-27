@@ -1,7 +1,7 @@
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY; // Ensure you have this in your .env file
 const BASE_URL = "https://api.themoviedb.org/3";
 
-const BACKEND_URL = "http://localhost:5050/api";
+const BACKEND_URL = "http://localhost:5050/api"; // hardcoded the api because of the CORS issue gonna fix this later
 
 export const getPopularMovies = async () => {
   try {
@@ -73,7 +73,7 @@ export const addFavorite = async (movie, token) => {
 
     return await res.json();  // This was crashing before
   } catch (err) {
-    console.error("❌ Error in addFavorite:", err);
+    console.error(" Error in addFavorite:", err);
     return { message: err.message }; // prevent crash
   }
 };
@@ -103,13 +103,13 @@ export const loginUser = async (user) => {
 
     if (!res.ok) {
       const errorText = await res.text();
-      console.error("❌ Login failed response:", errorText);
+      console.error("Login failed response:", errorText);
       return { message: "Login failed", details: errorText };
     }
 
     if (contentType && contentType.includes("application/json")) {
       const data = await res.json();
-      console.log("✅ Login success:", data);
+      console.log("Login success:", data);
       return data;
     } else {
       const raw = await res.text();
@@ -117,7 +117,7 @@ export const loginUser = async (user) => {
       return { message: "Unexpected response from server" };
     }
   } catch (e) {
-    console.error("❌ Login fetch error:", e);
+    console.error("Login fetch error:", e);
     return { message: "Network or server error" };
   }
 };
