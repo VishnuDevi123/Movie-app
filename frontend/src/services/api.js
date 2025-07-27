@@ -1,12 +1,14 @@
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY; // Ensure you have this in your .env file
 const BASE_URL = "https://api.themoviedb.org/3";
 
-const BACKEND_URL = import.meta.env.VITE_API_URL;
+const BACKEND_URL = "http://localhost:5050/api";
 
 export const getPopularMovies = async () => {
   try {
-    const response = await fetch(`${BASE_URL}/movie/popular?api_key=${API_KEY}&language=en-US&page=1`);
-    
+    const response = await fetch(
+      `${BASE_URL}/movie/popular?api_key=${API_KEY}&language=en-US&page=1`
+    );
+
     if (!response.ok) {
       throw new Error(`Failed to fetch popular movies: ${response.status}`);
     }
@@ -24,7 +26,9 @@ export const getPopularMovies = async () => {
 export const searchMovies = async (query) => {
   try {
     const response = await fetch(
-      `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(query)}`
+      `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(
+        query
+      )}`
     );
 
     if (!response.ok) {
@@ -52,15 +56,26 @@ export const getFavorites = async (token) => {
 
 // Add movie to favorites (protected)
 export const addFavorite = async (movie, token) => {
-  const res = await fetch(`${BACKEND_URL}/favorites/add`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(movie),
-  });
-  return res.json();
+  try {
+    const res = await fetch(`${BACKEND_URL}/favorites/add`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(movie),
+    });
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(`Failed to add favorite: ${errorText}`);
+    }
+
+    return await res.json();  // This was crashing before
+  } catch (err) {
+    console.error("❌ Error in addFavorite:", err);
+    return { message: err.message }; // prevent crash
+  }
 };
 
 // Remove movie from favorites by movie ID (protected)
@@ -75,20 +90,38 @@ export const removeFavorite = async (movieId, token) => {
 };
 
 export const loginUser = async (user) => {
-  const res = await fetch("http://localhost:5050/api/auth/login", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(user),
-  });
+  try {
+    const res = await fetch("http://localhost:5050/api/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(user),
+    });
 
-  if (!res.ok) {
-    throw new Error("Login failed");
+    const contentType = res.headers.get("content-type");
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      console.error("❌ Login failed response:", errorText);
+      return { message: "Login failed", details: errorText };
+    }
+
+    if (contentType && contentType.includes("application/json")) {
+      const data = await res.json();
+      console.log("✅ Login success:", data);
+      return data;
+    } else {
+      const raw = await res.text();
+      console.warn("⚠️ Non-JSON response:", raw);
+      return { message: "Unexpected response from server" };
+    }
+  } catch (e) {
+    console.error("❌ Login fetch error:", e);
+    return { message: "Network or server error" };
   }
-
-  return res.json(); // returns token
 };
+
 export const registerUser = async (user) => {
   const res = await fetch("http://localhost:5050/api/auth/register", {
     method: "POST",

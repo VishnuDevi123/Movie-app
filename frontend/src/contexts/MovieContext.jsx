@@ -1,42 +1,49 @@
-import {createContext, useState, useContext, useEffect} from "react"
+import { createContext, useContext, useState, useEffect } from "react";
+import { getFavorites, addFavorite, removeFavorite } from "../services/api";
 
-const MovieContext = createContext()
+const MovieContext = createContext();
 
-export const useMovieContext = () => useContext(MovieContext)
+export const MovieProvider = ({ children }) => {
+  const [favorites, setFavorites] = useState([]);
 
-export const MovieProvider = ({children}) => {
-    const [favorites, setFavorites] = useState([])
+  const fetchFavorites = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    const res = await getFavorites(token);
+    setFavorites(res);
+  };
 
-    useEffect(() => {
-        const storedFavs = localStorage.getItem("favorites")
+  useEffect(() => {
+    fetchFavorites(); // load on app start if token exists
+  }, []);
 
-        if (storedFavs) setFavorites(JSON.parse(storedFavs))
-    }, [])
+  const handleAddFavorite = async (movie) => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    const res = await addFavorite(movie, token);
+    if (res.favorites) setFavorites(res.favorites);
+  };
 
-    useEffect(() => {
-        localStorage.setItem('favorites', JSON.stringify(favorites))
-    }, [favorites])
+  const handleRemoveFavorite = async (movieId) => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    const res = await removeFavorite(movieId, token);
+    if (res.favorites) setFavorites(res.favorites);
+  };
 
-    const addToFavorites = (movie) => {
-        setFavorites(prev => [...prev, movie])
-    }
-
-    const removeFromFavorites = (movieId) => {
-        setFavorites(prev => prev.filter(movie => movie.id !== movieId))
-    }
-    
-    const isFavorite = (movieId) => {
-        return favorites.some(movie => movie.id === movieId)
-    }
-
-    const value = {
+  return (
+    <MovieContext.Provider
+      value={{
         favorites,
-        addToFavorites,
-        removeFromFavorites,
-        isFavorite
-    }
-
-    return <MovieContext.Provider value={value}>
-        {children}
+        handleAddFavorite,
+        handleRemoveFavorite,
+        fetchFavorites,
+        setFavorites,
+      }}
+    >
+      {children}
     </MovieContext.Provider>
-}
+  );
+};
+
+export const useMovieContext = () => useContext(MovieContext);

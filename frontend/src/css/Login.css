@@ -1,61 +1,75 @@
-.login-page {
-    padding: 2rem 1rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 80vh;
-    box-sizing: border-box;
-  }
-  
-  .login-form {
-    max-width: 400px;
-    width: 100%;
-    background-color: #111;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
-  
-  .login-form h2 {
-    text-align: center;
-    margin-bottom: 1.5rem;
-    color: white;
-  }
-  
-  .login-form input {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    margin-bottom: 1rem;
-    border: none;
-    border-radius: 4px;
-    background-color: #333;
-    color: white;
-    font-size: 1rem;
-  }
-  
-  .login-form input:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px #666;
-  }
-  
-  .login-form button {
-    width: 100%;
-    padding: 0.75rem;
-    background-color: #e50914;
-    color: white;
-    font-weight: 500;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .login-form button:hover {
-    background-color: #f40612;
-  }
-  
-  .login-form .error {
-    color: #ff6b6b;
-    text-align: center;
-    margin-bottom: 1rem;
-  }
-  
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #121212;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.auth-form {
+  background-color: #1e1e1e;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+  width: 100%;
+  max-width: 400px;
+}
+
+.auth-form h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: white;
+}
+
+.auth-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  border: none;
+  border-radius: 4px;
+  background-color: #333;
+  color: white;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.auth-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #666;
+}
+
+.auth-button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #e50914;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.auth-button:hover {
+  background-color: #f40612;
+}
+.auth-link {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  color: #ccc;
+}
+
+.auth-link a {
+  color: #e50914;
+  text-decoration: none;
+  font-weight: 500;
+  margin-left: 0.3rem;
+}
+
+.auth-link a:hover {
+  text-decoration: underline;
+}

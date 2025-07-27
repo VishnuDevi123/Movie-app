@@ -4,7 +4,11 @@ import { useNavigate } from "react-router-dom";
 import "../css/Register.css";
 
 function Register() {
-  const [formData, setFormData] = useState({ username: "", email: "", password: "" });
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -22,12 +26,36 @@ function Register() {
   };
 
   return (
-    <form onSubmit={handleRegister}>
-      <input type="text" name="username" placeholder="Username" onChange={handleChange} required />
-      <input type="email" name="email" placeholder="Email" onChange={handleChange} required />
-      <input type="password" name="password" placeholder="Password" onChange={handleChange} required />
-      <button type="submit">Register</button>
+    <div className = "auth-container">
+    <form onSubmit={handleRegister} className="auth-form">
+    <h2>Register</h2>
+      <input
+        type="text"
+        name="username"
+        className="auth-input"
+        placeholder="Username"
+        onChange={handleChange}
+        required
+      />
+      <input
+        type="email"
+        name="email"
+        className="auth-input"
+        placeholder="Email"
+        onChange={handleChange}
+        required
+      />
+      <input
+        type="password"
+        name="password"
+        className="auth-input"
+        placeholder="Password"
+        onChange={handleChange}
+        required
+      />
+      <button type="submit" className="auth-button">Register</button>
     </form>
+    </div>
   );
 }
 

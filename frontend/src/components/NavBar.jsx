@@ -1,14 +1,18 @@
 import { Link, useNavigate } from "react-router-dom";
 import React from "react";
 import "../css/Navbar.css";
+import { useMovieContext } from "../contexts/MovieContext";
 
 function NavBar() {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
+  const {setFavorites} = useMovieContext();
+
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    navigate("/login");
+    setFavorites([]); // Clear favorites on logout
+    navigate("/login"); 
   };
 
   return (
