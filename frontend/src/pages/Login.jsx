@@ -2,10 +2,12 @@ import { useState } from "react";
 import { loginUser } from "../services/api";
 import { useNavigate } from "react-router-dom";
 import { useMovieContext } from "../contexts/MovieContext";
+import {useAuth} from "../contexts/AuthContext";
 
 import "../css/Login.css";
 
 function Login() {
+  const { login } = useAuth();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const navigate = useNavigate();
   const { fetchFavorites } = useMovieContext();
@@ -22,7 +24,7 @@ function Login() {
 
     const response = await loginUser(formData);
     if (response.token) {
-      localStorage.setItem("token", response.token);
+      login(response.token); // use context login
       await fetchFavorites(); // wait for full fetch
       setLoading(false);
       navigate("/");
@@ -35,7 +37,7 @@ function Login() {
   return (
     <div className="auth-container">
       <form onSubmit={handleLogin} className="auth-form">
-        <h2>Login in to See your Favourite Movies Generes</h2>
+        <h2>Log in for your favorite genres.</h2>
         <input
           type="email"
           name="email"

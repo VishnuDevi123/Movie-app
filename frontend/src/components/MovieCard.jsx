@@ -1,14 +1,17 @@
 import "../css/MovieCard.css";
 import { useMovieContext } from "../contexts/MovieContext";
+import { useState } from "react";
 
 function MovieCard({ movie }) {
-  const {
-    favorites,
-    handleAddFavorite,
-    handleRemoveFavorite,
-  } = useMovieContext();
+  const { favorites, handleAddFavorite, handleRemoveFavorite } =
+    useMovieContext();
 
   const isFavorite = favorites.some((fav) => fav.id === movie.id);
+  const [isFlipped, setIsFlipped] = useState(false);
+
+  const handleCardClick = () => {
+    setIsFlipped((prev) => !prev);
+  };
 
   const onFavoriteClick = (e) => {
     e.preventDefault();
@@ -26,24 +29,37 @@ function MovieCard({ movie }) {
   };
 
   return (
-    <div className="movie-card">
-      <div className="movie-poster">
-        <img
-          src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-          alt={movie.title}
-        />
-        <div className="movie-overlay">
+    <div
+      className={`movie-card ${isFlipped ? "flipped" : ""}`}
+      onClick={handleCardClick}
+    >
+      <div className="card-inner">
+        <div className="card-front">
+          <img
+            src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+            alt={movie.title}
+          />
           <button
             className={`favorite-btn ${isFavorite ? "active" : ""}`}
-            onClick={onFavoriteClick}
+            onClick={(e) => {
+              e.stopPropagation(); // prevent flipping
+              onFavoriteClick(e);
+            }}
           >
             ♥
           </button>
         </div>
-      </div>
-      <div className="movie-info">
-        <h3>{movie.title}</h3>
-        <p>{movie.release_date?.split("-")[0]}</p>
+
+        <div className="card-back">
+          <h3>{movie.title}</h3>
+          <p>
+            <strong>Overview:</strong>
+          </p>
+          <p>{movie.overview || "No overview available."}</p>
+          <p>
+            <strong>Release Date:</strong> {movie.release_date}
+          </p>
+        </div>
       </div>
     </div>
   );
