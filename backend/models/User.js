@@ -27,6 +27,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  avatar: {
+    type: String,
+  },
 
   favorites: [favoriteSchema] // Use subdocument schema
 });

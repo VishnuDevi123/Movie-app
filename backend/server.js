@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const userRoutes = require("./routes/user");
 require("dotenv").config();
 
 const authRoutes = require("./routes/auth");
@@ -11,13 +12,13 @@ const app = express();
 app.use(
   cors({
     origin: "http://localhost:5173", // or "*" for all origins during development
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "DELETE","PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
 app.use(express.json());
-
+app.use("/uploads", express.static("uploads"));
 // MongoDB connection
 const MONGO_URI = process.env.MONGODB_URI ;
 mongoose
@@ -31,6 +32,7 @@ mongoose
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/favorites", favoriteRoutes);
+app.use("/api/users", userRoutes);
 
 // Root route
 app.get("/", (req, res) => {

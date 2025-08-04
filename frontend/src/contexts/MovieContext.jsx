@@ -1,10 +1,13 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { getFavorites, addFavorite, removeFavorite } from "../services/api";
+import { getPopularMovies as fetchPopular } from "../services/api";
 
 const MovieContext = createContext();
 
 export const MovieProvider = ({ children }) => {
   const [favorites, setFavorites] = useState([]);
+  const [movies, setMovies] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const fetchFavorites = async () => {
     const token = localStorage.getItem("token");
@@ -16,6 +19,16 @@ export const MovieProvider = ({ children }) => {
   useEffect(() => {
     fetchFavorites(); // load on app start if token exists
   }, []);
+
+  const getPopularMovies = async () => {
+    const data = await fetchPopular();
+    setMovies(data);
+  };
+
+  const resetToPopular = () => {
+    setSearchQuery("");
+    getPopularMovies();
+  };
 
   const handleAddFavorite = async (movie) => {
     const token = localStorage.getItem("token");
@@ -35,10 +48,16 @@ export const MovieProvider = ({ children }) => {
     <MovieContext.Provider
       value={{
         favorites,
+        movies,
+        setMovies,
+        searchQuery,
+        setSearchQuery,
         handleAddFavorite,
         handleRemoveFavorite,
         fetchFavorites,
         setFavorites,
+        getPopularMovies,
+        resetToPopular,
       }}
     >
       {children}

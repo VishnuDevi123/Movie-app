@@ -1,6 +1,6 @@
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY; // Ensure you have this in your .env file
 const BASE_URL = "https://api.themoviedb.org/3";
-
+import axios from "axios";
 const BACKEND_URL = "http://localhost:5050/api"; // hardcoded the api because of the CORS issue gonna fix this later
 
 export const getPopularMovies = async () => {
@@ -22,7 +22,7 @@ export const getPopularMovies = async () => {
   }
 };
 
-// 📌 Search movies from TMDB
+//  Search movies from TMDB
 export const searchMovies = async (query) => {
   try {
     const response = await fetch(
@@ -71,7 +71,7 @@ export const addFavorite = async (movie, token) => {
       throw new Error(`Failed to add favorite: ${errorText}`);
     }
 
-    return await res.json();  // This was crashing before
+    return await res.json(); // This was crashing before
   } catch (err) {
     console.error(" Error in addFavorite:", err);
     return { message: err.message }; // prevent crash
@@ -136,4 +136,39 @@ export const registerUser = async (user) => {
   }
 
   return res.json();
+};
+
+const API = axios.create({
+  baseURL: BACKEND_URL, // or your deployed backend
+});
+
+// Get token from localStorage and attach to every request if present
+API.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+export const uploadAvatar = async (formData) => {
+  try {
+
+    const response = await fetch("http://localhost:5050/api/users/avatar", {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error("Upload failed");
+    }
+
+    return await response.json();
+  } catch (err) {
+    console.error("Avatar upload error:", err);
+    return { error: true, message: err.message };
+  }
 };

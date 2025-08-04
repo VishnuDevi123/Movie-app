@@ -6,7 +6,7 @@ import { useAuth } from "../contexts/AuthContext";
 
 function NavBar() {
   const navigate = useNavigate();
-  const { setFavorites } = useMovieContext();
+  const { setFavorites, resetToPopular } = useMovieContext();
   const { user, logout } = useAuth();
 
   const handleLogout = () => {
@@ -21,7 +21,15 @@ function NavBar() {
         <Link to="/">Movie App</Link>
       </div>
       <div className="navbar-links">
-        <Link to="/" className="nav-link">
+        <Link
+          to="/"
+          className="nav-link"
+          onClick={(e) => {
+            e.preventDefault();
+            navigate("/"); // navigate even if already on "/"
+            resetToPopular(); // refresh popular movies
+          }}
+        >
           Home
         </Link>
 

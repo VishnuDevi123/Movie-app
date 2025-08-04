@@ -1,49 +1,47 @@
 import MovieCard from "../components/MovieCard";
-import { useState, useEffect } from "react";
-import { searchMovies, getPopularMovies } from "../services/api";
-
+import { useEffect, useState } from "react";
+import { searchMovies } from "../services/api";
+import { useMovieContext } from "../contexts/MovieContext";
 import "../css/Home.css";
 
 function Home() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [movies, setMovies] = useState([]);
+  const {
+    movies,
+    setMovies,
+    searchQuery,
+    setSearchQuery,
+    getPopularMovies,
+  } = useMovieContext();
+
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const loadPopularMovies = async () => {
-      try {
-        const popularMovies = await getPopularMovies();
-        setMovies(popularMovies);
-      } catch (error) {
-        setError("Failed to fetch popular movies.");
-        console.error("Failed to fetch popular movies:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadPopularMovies();
+    if (!movies || movies.length === 0) {
+      getPopularMovies().finally(() => setLoading(false));
+    } else {
+      setLoading(false); // Already loaded
+    }
   }, []);
 
   const handleSearch = async (event) => {
     event.preventDefault();
+
     if (!searchQuery.trim()) {
       setError("Please enter a search query.");
       return;
     }
-    if (loading) return;
-    setLoading(true);
 
+    setLoading(true);
     try {
-      const searchResults = await searchMovies(searchQuery);
-      setMovies(searchResults);
+      const results = await searchMovies(searchQuery);
+      setMovies(results);
       setError(null);
-    } catch (error) {
+    } catch (err) {
+      console.error("Search error:", err);
       setError("Failed to fetch search results.");
-      console.error("Search error:", error);
     } finally {
-      setLoading(false); // This ensures UI unblocks after search
+      setLoading(false);
     }
   };
 
@@ -52,7 +50,7 @@ function Home() {
       <form onSubmit={handleSearch} className="search-form">
         <input
           type="text"
-          placeholder="Searchg for movies..."
+          placeholder="Search for movies..."
           className="search-input"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
@@ -63,6 +61,7 @@ function Home() {
       </form>
 
       {error && <div className="error-message">{error}</div>}
+
       {loading ? (
         <div className="loading">Loading...</div>
       ) : (

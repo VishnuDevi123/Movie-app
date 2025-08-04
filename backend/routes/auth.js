@@ -24,7 +24,6 @@ router.post("/register", async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
   console.log("Incoming registration:", req.body);
-
 });
 
 // Login
@@ -41,11 +40,15 @@ router.post("/login", async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     console.log("Password match:", isMatch);
 
-    if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
+    if (!isMatch)
+      return res.status(401).json({ message: "Invalid credentials" });
 
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1d",
-    });
+    // refined this line for better information being passed to the frontend
+    const token = jwt.sign(
+      { userId: user._id, email: user.email, username: user.username , avatar: user.avatar },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
 
     res.json({ token });
   } catch (err) {
@@ -53,7 +56,6 @@ router.post("/login", async (req, res) => {
     res.status(500).json({ message: "Server error during login" });
   }
 });
-
 
 // Middleware to verify token
 function authenticateToken(req, res, next) {

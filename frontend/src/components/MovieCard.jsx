@@ -1,11 +1,16 @@
 import "../css/MovieCard.css";
 import { useMovieContext } from "../contexts/MovieContext";
+import {useAuth} from "../contexts/AuthContext";
 import { useState } from "react";
+import { useAuthModal } from "../contexts/AuthModalContext";
+
 
 function MovieCard({ movie }) {
   const { favorites, handleAddFavorite, handleRemoveFavorite } =
     useMovieContext();
 
+  const { user } = useAuth(); // Get the current user from AuthContext
+  const {setShowAuthModal} = useAuthModal(); // Use the AuthModal context to control the modal visibility
   const isFavorite = favorites.some((fav) => fav.id === movie.id);
   const [isFlipped, setIsFlipped] = useState(false);
 
@@ -15,6 +20,11 @@ function MovieCard({ movie }) {
 
   const onFavoriteClick = (e) => {
     e.preventDefault();
+    e.stopPropagation(); // Prevent the card from flipping when clicking the favorite button
+    if (!user){
+      setShowAuthModal(true);
+      return; // If not logged in, show modal and do not proceed with the favorite action
+    }
     if (isFavorite) {
       handleRemoveFavorite(movie.id);
     } else {
@@ -48,6 +58,7 @@ function MovieCard({ movie }) {
           >
             ♥
           </button>
+
         </div>
 
         <div className="card-back">
