@@ -11,6 +11,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Profile from "./pages/Profile.jsx";
 import AuthPromptModal from "./components/AuthPromptModal";
 import "./css/App.css";
+import Recommend from "./pages/Recommend.jsx";
 
 // Separate wrapper to include the modal
 function AppContent() {
@@ -33,6 +34,13 @@ function AppContent() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          {/* protected route just like favorites*/}
+          <Route path = "/recommend" element={
+            <ProtectedRoute>
+              <Recommend />
+            </ProtectedRoute>
+          } />
+          
         </Routes>
       </main>
 

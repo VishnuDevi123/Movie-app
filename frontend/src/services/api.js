@@ -151,6 +151,7 @@ API.interceptors.request.use((config) => {
   return config;
 });
 
+/*uplodaing the avatar */
 export const uploadAvatar = async (formData) => {
   try {
 
@@ -171,4 +172,15 @@ export const uploadAvatar = async (formData) => {
     console.error("Avatar upload error:", err);
     return { error: true, message: err.message };
   }
+};
+
+/* getting the recommendation */ 
+export const getRecommendations = async () => {
+    try {
+      const response = await API.get("/recommendations");
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching recommendations:", error);
+      return [];
+    }
 };

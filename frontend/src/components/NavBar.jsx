@@ -34,9 +34,14 @@ function NavBar() {
         </Link>
 
         {user && (
-          <Link to="/favorites" className="nav-link">
-            Favorites
-          </Link>
+          <>
+            <Link to="/favorites" className="nav-link">
+              Favorites
+            </Link>
+            <Link to="/recommend" className="nav-link">
+              Recommendations
+            </Link>
+          </>
         )}
 
         {user ? (

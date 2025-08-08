@@ -4,6 +4,7 @@ const cors = require("cors");
 const userRoutes = require("./routes/user");
 require("dotenv").config();
 
+
 const authRoutes = require("./routes/auth");
 const favoriteRoutes = require("./routes/favorites");
 const app = express();
@@ -34,6 +35,10 @@ app.use("/api/auth", authRoutes);
 app.use("/api/favorites", favoriteRoutes);
 app.use("/api/users", userRoutes);
 
+// Importing and use the recommendations route
+const recommendRoute = require("./routes/recommend");
+app.use("/api", recommendRoute); // This adds GET /api/recommendations
+
 // Root route
 app.get("/", (req, res) => {
   res.send(" Movie App API is running");
@@ -43,4 +48,6 @@ app.get("/", (req, res) => {
 const PORT = process.env.PORT || 5050;
 app.listen(PORT, () => {
   console.log(` Server running on http://localhost:${PORT}`);
+
 });
+

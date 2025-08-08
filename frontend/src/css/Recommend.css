@@ -1,0 +1,50 @@
+.recommend {
+    padding: 2rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .recommend h2 {
+    margin-bottom: 2rem;
+    text-align: center;
+    font-size: 2.5rem;
+    color: #ffffff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  }
+  
+  .recommend-empty {
+    text-align: center;
+    padding: 4rem 2rem;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    margin: 2rem auto;
+    max-width: 600px;
+  }
+  
+  .recommend-empty h2 {
+    margin-bottom: 1rem;
+    font-size: 2rem;
+    color: #1db954; /* green accent to differentiate from favorites */
+  }
+  
+  .recommend-empty p {
+    color: #ccc;
+    font-size: 1.2rem;
+    line-height: 1.6;
+  }
+  
+  /* Animation for new recommendations being displayed */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .movies-grid > * {
+    animation: fadeIn 0.3s ease-out forwards;
+  }
